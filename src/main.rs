@@ -519,3 +519,40 @@ fn fetch_manifest_from_sources_list(
 
     names
 }
+
+#[cfg(test)]
+mod cli_test {
+    use super::*;
+    use assert_cmd::prelude::*;
+    use assert_cmd::Command;
+    use std::fs;
+    
+    #[test]
+    fn test_no_optional_args() -> Result<(), Box<dyn std::error::Error>> {
+        let _ = fs::remove_dir_all("os-rootfs");
+
+        let mut cmd = Command::cargo_bin("aoscbootstrap")?;
+        cmd
+            .arg("-c").arg("config/test-minimal.toml")
+            .arg("--target").arg("os-rootfs");
+
+        cmd.assert().success();
+        Ok(())
+    }
+
+    #[test]
+    fn test_mirror_branch() -> Result<(), Box<dyn std::error::Error>> {
+        let _ = fs::remove_dir_all("os-rootfs");
+
+        let mut cmd = Command::cargo_bin("aoscbootstrap")?;
+        cmd
+            .arg("-c").arg("config/test-minimal.toml")
+            .arg("--target").arg("os-rootfs")
+            .arg("--mirror").arg("https://repo.aosc.io/debs")
+            .arg("--branch").arg("stable")
+            ;
+
+        cmd.assert().success();
+        Ok(())
+    }
+}
