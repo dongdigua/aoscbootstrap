@@ -569,12 +569,11 @@ mod cli_test {
     }
 
     #[test]
-    fn test_mirror_branch() -> Result<(), Box<dyn std::error::Error>> {
+    fn test_branch_no_mirror() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("aoscbootstrap")?;
         cmd
             .arg("-c").arg("config/aosc-mainline.toml")
-            .arg("--target").arg("os-mirror-branch")
-            .arg("--mirror").arg("https://repo.aosc.io/debs")
+            .arg("--target").arg("os-branch-no-mirror")
             .arg("--branch").arg("stable")
             ;
 
@@ -583,12 +582,25 @@ mod cli_test {
     }
 
     #[test]
-    fn test_branch_no_mirror() -> Result<(), Box<dyn std::error::Error>> {
+    fn test_mirror_no_branch() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("aoscbootstrap")?;
         cmd
             .arg("-c").arg("config/aosc-mainline.toml")
-            .arg("--target").arg("os-branch-no-mirror")
-            .arg("--branch").arg("stable")
+            .arg("--target").arg("os-mirror-no-branch")
+            .arg("--mirror").arg("https://repo.aosc.io/debs")
+            ;
+
+        cmd.assert().success();
+        Ok(())
+    }
+
+    #[test]
+    fn test_sources_list() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("aoscbootstrap")?;
+        cmd
+            .arg("-c").arg("config/aosc-mainline.toml")
+            .arg("--target").arg("os-sources-list")
+            .arg("--sources-list").arg("sources.list")
             ;
 
         cmd.assert().success();

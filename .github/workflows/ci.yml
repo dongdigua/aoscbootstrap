@@ -21,4 +21,6 @@ jobs:
       run: sudo cargo build --verbose
 
     - name: Test
-      run: sudo env RUST_BACKTRACE=1 cargo test
+      run: |
+        echo "deb https://repo.aosc.io/debs stable main" >> sources.list
+        sudo env RUST_BACKTRACE=1 cargo test
