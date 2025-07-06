@@ -7,7 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y libssl-dev pkg-config liblzma-dev cmake make nettle-dev rustup
+      run: |
+        sudo apt-get update && sudo apt-get install -y libssl-dev pkg-config liblzma-dev cmake make nettle-dev rustup
+        curl -O https://repo.aosc.io/debs/pool/stable/main/a/arch-chroot_28+mirrorlist20231113+pacman6.0.1-0_noarch.deb
+        sudo dpkg --force-depends -i *.deb
 
     - name: Setup Rust for root
       run: sudo rustup default stable
@@ -18,4 +21,4 @@ jobs:
       run: sudo cargo build --verbose
 
     - name: Test
-      run: sudo cargo test
+      run: sudo env RUST_BACKTRACE=1 cargo test

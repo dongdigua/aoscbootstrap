@@ -559,12 +559,10 @@ mod cli_test {
     
     #[test]
     fn test_no_optional_args() -> Result<(), Box<dyn std::error::Error>> {
-        let _ = fs::remove_dir_all("os-rootfs");
-
         let mut cmd = Command::cargo_bin("aoscbootstrap")?;
         cmd
             .arg("-c").arg("config/aosc-mainline.toml")
-            .arg("--target").arg("os-rootfs");
+            .arg("--target").arg("os-no-optional-args");
 
         cmd.assert().success();
         Ok(())
@@ -572,12 +570,10 @@ mod cli_test {
 
     #[test]
     fn test_mirror_branch() -> Result<(), Box<dyn std::error::Error>> {
-        let _ = fs::remove_dir_all("os-rootfs");
-
         let mut cmd = Command::cargo_bin("aoscbootstrap")?;
         cmd
             .arg("-c").arg("config/aosc-mainline.toml")
-            .arg("--target").arg("os-rootfs")
+            .arg("--target").arg("os-mirror-branch")
             .arg("--mirror").arg("https://repo.aosc.io/debs")
             .arg("--branch").arg("stable")
             ;
@@ -588,12 +584,10 @@ mod cli_test {
 
     #[test]
     fn test_branch_no_mirror() -> Result<(), Box<dyn std::error::Error>> {
-        let _ = fs::remove_dir_all("os-rootfs");
-
         let mut cmd = Command::cargo_bin("aoscbootstrap")?;
         cmd
             .arg("-c").arg("config/aosc-mainline.toml")
-            .arg("--target").arg("os-rootfs")
+            .arg("--target").arg("os-branch-no-mirror")
             .arg("--branch").arg("stable")
             ;
 
