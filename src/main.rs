@@ -549,3 +549,59 @@ fn fetch_manifest_from_sources_list(
 
     names
 }
+
+#[cfg(test)]
+mod cli_test {
+    use super::*;
+    use assert_cmd::Command;
+
+    #[test]
+    fn test_no_optional_args() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("aoscbootstrap")?;
+        cmd
+            .arg("-c").arg("config/aosc-mainline.toml")
+            .arg("--target").arg("os-no-optional-args");
+
+        cmd.assert().success();
+        Ok(())
+    }
+
+    #[test]
+    fn test_branch_no_mirror() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("aoscbootstrap")?;
+        cmd
+            .arg("-c").arg("config/aosc-mainline.toml")
+            .arg("--target").arg("os-branch-no-mirror")
+            .arg("--branch").arg("stable")
+            ;
+
+        cmd.assert().success();
+        Ok(())
+    }
+
+    #[test]
+    fn test_mirror_no_branch() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("aoscbootstrap")?;
+        cmd
+            .arg("-c").arg("config/aosc-mainline.toml")
+            .arg("--target").arg("os-mirror-no-branch")
+            .arg("--mirror").arg("https://repo.aosc.io/debs")
+            ;
+
+        cmd.assert().success();
+        Ok(())
+    }
+
+    #[test]
+    fn test_sources_list() -> Result<(), Box<dyn std::error::Error>> {
+        let mut cmd = Command::cargo_bin("aoscbootstrap")?;
+        cmd
+            .arg("-c").arg("config/aosc-mainline.toml")
+            .arg("--target").arg("os-sources-list")
+            .arg("--sources-list").arg("sources.list")
+            ;
+
+        cmd.assert().success();
+        Ok(())
+    }
+}

@@ -6,13 +6,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: hecrj/setup-rust-action@master
-      with:
-        rust-version: stable
-
     - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y libssl-dev pkg-config liblzma-dev cmake make nettle-dev
+      run: |
+        sudo apt-get update && sudo apt-get install -y libssl-dev pkg-config liblzma-dev cmake make nettle-dev rustup
+        curl -O https://repo.aosc.io/debs/pool/stable/main/a/arch-chroot_28+mirrorlist20231113+pacman6.0.1-0_noarch.deb
+        curl -O https://repo.aosc.io/debs/pool/stable/main/a/aosc-os-keyring_20241006-0_noarch.deb # fix --sources-list
+        sudo dpkg --force-depends -i *.deb
+
+    - name: Setup Rust for root
+      run: sudo rustup default stable
 
     - uses: actions/checkout@v2
-    - name: Build
-      run: cargo build --verbose
+
+    - name: Build # caches the build for test below
+      run: sudo cargo build --verbose
+
+    - name: Test
+      run: |
+        echo "deb https://repo.aosc.io/debs stable main" >> sources.list
+        export TARGET_DIR=assets # for test_est_tar_size
+        sudo -E cargo test
