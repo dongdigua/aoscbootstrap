@@ -553,10 +553,8 @@ fn fetch_manifest_from_sources_list(
 #[cfg(test)]
 mod cli_test {
     use super::*;
-    use assert_cmd::prelude::*;
     use assert_cmd::Command;
-    use std::fs;
-    
+
     #[test]
     fn test_no_optional_args() -> Result<(), Box<dyn std::error::Error>> {
         let mut cmd = Command::cargo_bin("aoscbootstrap")?;
